@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>용산역 집결 및 ITX-청춘 탑승 안내 VR</title>
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+
+<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+
+<style>
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,sans-serif;
+}
+
+#panorama{
+    width:100%;
+    height:100%;
+}
+
+.sceneTitle{
+    position:absolute;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:1000;
+
+    background:rgba(0,0,0,.6);
+    color:#fff;
+
+    padding:12px 25px;
+    border-radius:12px;
+
+    font-size:22px;
+    font-weight:bold;
+}
+
+.startMenu{
+
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    z-index:2000;
+
+    background:rgba(255,255,255,.95);
+
+    padding:30px;
+
+    border-radius:20px;
+
+    text-align:center;
+
+    box-shadow:0 0 20px rgba(0,0,0,.4);
+
+}
+
+.startMenu h2{
+    margin-top:0;
+}
+
+.startBtn{
+
+    display:block;
+
+    width:320px;
+
+    margin:15px auto;
+
+    padding:18px;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#0d6efd;
+
+    color:#fff;
+}
+
+.pnlm-hotspot.bigArrow{
+
+    width:140px !important;
+    height:140px !important;
+
+    border-radius:70px !important;
+
+    background:#ffffff !important;
+
+    border:4px solid rgba(0,0,0,.2) !important;
+
+    box-shadow:0 0 20px rgba(0,0,0,.5);
+
+    display:flex !important;
+    justify-content:center;
+    align-items:center;
+
+}
+
+.bigArrow div{
+
+    font-size:90px;
+    font-weight:bold;
+    color:#000000;
+
+    line-height:1;
+}
+
+@media(max-width:768px){
+
+    .startBtn{
+        width:280px;
+        font-size:18px;
+    }
+
+    .pnlm-hotspot.bigArrow{
+
+        width:180px !important;
+        height:180px !important;
+
+        border-radius:90px !important;
+    }
+
+    .bigArrow div{
+
+        font-size:120px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="panorama"></div>
+
+<div class="sceneTitle" id="sceneTitle">
+용산역 집결 및 ITX-청춘 탑승 안내
+</div>
+
+<div class="startMenu" id="startMenu">
+
+<h2>출발 위치를 선택하세요</h2>
+
+<button class="startBtn"
+onclick="startRoute('outside')">
+📍 용산역 밖에서 바로 오시는 분
+</button>
+
+<button class="startBtn"
+onclick="startRoute('seoul')">
+🚉 서울역 방향에서 오시는 분
+</button>
+
+<button class="startBtn"
+onclick="startRoute('yeongdeungpo')">
+🚉 영등포역 방향에서 오시는 분
+</button>
+
+</div>
+
+<script>
+
+let viewer;
+
+const commonScenes = [
+
+"meeting_point_cafe_mignon",
+"meeting_point_platform_column",
+"itx_ticket_gate",
+"itx_corridor",
+"itx_escalator",
+"itx_platform1",
+"itx_boarding",
+"itx_second_floor"
+
+];
+
+const titles = {
+
+yongsan_outside_arrival:
+"용산역 외부 접근",
+
+line1_from_seoul_station:
+"1호선 (서울역 → 용산역)",
+
+line1_from_yeongdeungpo:
+"1호선 (영등포역 → 용산역)",
+
+meeting_point_cafe_mignon:
+"집결 장소 (카페 미뇽)",
+
+meeting_point_platform_column:
+"전철 타는 곳 기둥",
+
+itx_ticket_gate:
+"ITX 청춘 개찰구",
+
+itx_corridor:
+"ITX 청춘 가는 통로",
+
+itx_escalator:
+"플랫폼 에스컬레이터",
+
+itx_platform1:
+"ITX 청춘 1번 플랫폼",
+
+itx_boarding:
+"ITX 청춘 탑승",
+
+itx_second_floor:
+"ITX 청춘 2층 객실"
+
+};
+
+function startRoute(type){
+
+document.getElementById("startMenu").style.display="none";
+
+let route=[];
+
+if(type==="outside"){
+
+route=[
+"yongsan_outside_arrival",
+...commonScenes
+];
+
+}
+
+if(type==="seoul"){
+
+route=[
+"line1_from_seoul_station",
+...commonScenes
+];
+
+}
+
+if(type==="yeongdeungpo"){
+
+route=[
+"line1_from_yeongdeungpo",
+...commonScenes
+];
+
+}
+
+createViewer(route);
+
+}
+
+function createViewer(route){
+
+const scenes={};
+
+for(let i=0;i<route.length;i++){
+
+const current=route[i];
+
+scenes[current]={
+
+type:"equirectangular",
+
+panorama:"images/"+current+".png",
+
+autoLoad:true,
+
+hfov:140,
+
+pitch:-5
+
+};
+
+if(i<route.length-1){
+
+const next=route[i+1];
+
+scenes[current].hotSpots=[
+
+{
+
+pitch:-8,
+yaw:0,
+
+cssClass:"bigArrow",
+
+createTooltipFunc:function(hotSpotDiv){
+
+hotSpotDiv.innerHTML=
+"<div>➜</div>";
+
+},
+
+clickHandlerFunc:function(){
+
+viewer.loadScene(next);
+
+document.getElementById("sceneTitle").innerText=
+titles[next];
+
+}
+
+}
+
+];
+
+}
+
+}
+
+viewer=pannellum.viewer('panorama',{
+
+default:{
+firstScene:route[0]
+},
+
+scenes:scenes
+
+});
+
+document.getElementById("sceneTitle").innerText=
+titles[route[0]];
+
+}
+
+</script>
+
+</body>
+</html>
