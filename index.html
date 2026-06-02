@@ -2,346 +2,273 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yongsan ITX Guide VR</title>
 
-<title>용산역 집결 및 ITX-청춘 탑승 안내 VR</title>
-
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
 <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
 
 <style>
-
-html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    font-family:Arial,sans-serif;
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: "Malgun Gothic", Arial, sans-serif;
 }
 
-#panorama{
-    width:100%;
-    height:100%;
+#panorama {
+  width: 100%;
+  height: 100%;
 }
 
-.sceneTitle{
-    position:absolute;
-    top:20px;
-    left:50%;
-    transform:translateX(-50%);
-    z-index:1000;
-
-    background:rgba(0,0,0,.6);
-    color:#fff;
-
-    padding:12px 25px;
-    border-radius:12px;
-
-    font-size:22px;
-    font-weight:bold;
+.titleBox {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(0,0,0,0.68);
+  color: #fff;
+  padding: 16px 28px;
+  border-radius: 16px;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.35;
 }
 
-.startMenu{
-
-    position:absolute;
-
-    top:50%;
-    left:50%;
-
-    transform:translate(-50%,-50%);
-
-    z-index:2000;
-
-    background:rgba(255,255,255,.95);
-
-    padding:30px;
-
-    border-radius:20px;
-
-    text-align:center;
-
-    box-shadow:0 0 20px rgba(0,0,0,.4);
-
+.startMenu {
+  position: absolute;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,0.78);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  text-align: center;
 }
 
-.startMenu h2{
-    margin-top:0;
+.startMenu h1 {
+  font-size: 30px;
+  margin-bottom: 28px;
 }
 
-.startBtn{
-
-    display:block;
-
-    width:320px;
-
-    margin:15px auto;
-
-    padding:18px;
-
-    font-size:20px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    border:none;
-
-    border-radius:12px;
-
-    background:#0d6efd;
-
-    color:#fff;
+.startMenu button {
+  width: 82%;
+  max-width: 420px;
+  margin: 10px;
+  padding: 18px 22px;
+  border: none;
+  border-radius: 18px;
+  background: #fff;
+  color: #000;
+  font-size: 22px;
+  font-weight: 800;
 }
 
-.pnlm-hotspot.bigArrow{
-
-    width:140px !important;
-    height:140px !important;
-
-    border-radius:70px !important;
-
-    background:#ffffff !important;
-
-    border:4px solid rgba(0,0,0,.2) !important;
-
-    box-shadow:0 0 20px rgba(0,0,0,.5);
-
-    display:flex !important;
-    justify-content:center;
-    align-items:center;
-
+.custom-hotspot {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: #fff;
+  border: 5px solid rgba(0,0,0,0.25);
+  box-shadow: 0 0 28px rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.bigArrow div{
-
-    font-size:90px;
-    font-weight:bold;
-    color:#000000;
-
-    line-height:1;
+.custom-hotspot::before {
+  content: "➜";
+  color: #000;
+  font-size: 125px;
+  font-weight: 900;
+  line-height: 1;
 }
 
-@media(max-width:768px){
+@media (max-width: 768px) {
+  .titleBox {
+    font-size: 24px;
+    padding: 14px 24px;
+  }
 
-    .startBtn{
-        width:280px;
-        font-size:18px;
-    }
+  .custom-hotspot {
+    width: 210px;
+    height: 210px;
+  }
 
-    .pnlm-hotspot.bigArrow{
-
-        width:180px !important;
-        height:180px !important;
-
-        border-radius:90px !important;
-    }
-
-    .bigArrow div{
-
-        font-size:120px;
-    }
-
+  .custom-hotspot::before {
+    font-size: 140px;
+  }
 }
-
 </style>
 </head>
 
 <body>
 
 <div id="panorama"></div>
+<div id="titleBox" class="titleBox"></div>
 
-<div class="sceneTitle" id="sceneTitle">
-용산역 집결 및 ITX-청춘 탑승 안내
-</div>
-
-<div class="startMenu" id="startMenu">
-
-<h2>출발 위치를 선택하세요</h2>
-
-<button class="startBtn"
-onclick="startRoute('outside')">
-📍 용산역 밖에서 바로 오시는 분
-</button>
-
-<button class="startBtn"
-onclick="startRoute('seoul')">
-🚉 서울역 방향에서 오시는 분
-</button>
-
-<button class="startBtn"
-onclick="startRoute('yeongdeungpo')">
-🚉 영등포역 방향에서 오시는 분
-</button>
-
+<div id="startMenu" class="startMenu">
+  <h1>용산역 ITX-청춘 탑승 안내 VR</h1>
+  <button onclick="startRoute('outside')">① 용산역 밖에서 출발</button>
+  <button onclick="startRoute('yeongdeungpo')">② 1호선 영등포 방향에서 도착</button>
+  <button onclick="startRoute('seoul')">③ 1호선 서울역 방향에서 도착</button>
 </div>
 
 <script>
+const scenes = {
+  yongsan_outside_arrival: {
+    title: "용산역 1번 출입구",
+    image: "images/yongsan_outside_arrival.png",
+    next: "meeting_point_cafe_mignon",
+    yaw: 0,
+    pitch: -5
+  },
 
-let viewer;
+  line1_from_yeongdeungpo: {
+    title: "1호선 도착 후 이동",
+    image: "images/line1_from_yeongdeungpo.png",
+    next: "meeting_point_cafe_mignon",
+    yaw: 0,
+    pitch: 0
+  },
 
-const commonScenes = [
+  line1_from_seoul_station: {
+    title: "1호선 도착 후 이동",
+    image: "images/line1_from_seoul_station.png",
+    next: "meeting_point_cafe_mignon",
+    yaw: 0,
+    pitch: 0
+  },
 
-"meeting_point_cafe_mignon",
-"meeting_point_platform_column",
-"itx_ticket_gate",
-"itx_corridor",
-"itx_escalator",
-"itx_platform1",
-"itx_boarding",
-"itx_second_floor"
+  meeting_point_cafe_mignon: {
+    title: "집결 장소<br>(카페 미뇽)",
+    image: "images/meeting_point_cafe_mignon.png",
+    next: "meeting_point_platform_column",
+    yaw: 0,
+    pitch: 0
+  },
 
-];
+  meeting_point_platform_column: {
+    title: "전철 타는 곳 기둥 앞",
+    image: "images/meeting_point_platform_column.png",
+    next: "itx_ticket_gate",
+    yaw: 0,
+    pitch: 0
+  },
 
-const titles = {
+  itx_ticket_gate: {
+    title: "ITX 승차권 확인 게이트",
+    image: "images/itx_ticket_gate.png",
+    next: "itx_corridor",
+    yaw: 0,
+    pitch: 0
+  },
 
-yongsan_outside_arrival:
-"용산역 외부 접근",
+  itx_corridor: {
+    title: "타는 곳 1번 방향 이동",
+    image: "images/itx_corridor.png",
+    next: "itx_escalator",
+    yaw: 0,
+    pitch: 0
+  },
 
-line1_from_seoul_station:
-"1호선 (서울역 → 용산역)",
+  itx_escalator: {
+    title: "1번 승강장으로 내려가기",
+    image: "images/itx_escalator.png",
+    next: "itx_platform1",
+    yaw: 0,
+    pitch: -5
+  },
 
-line1_from_yeongdeungpo:
-"1호선 (영등포역 → 용산역)",
+  itx_platform1: {
+    title: "ITX-청춘 1번 승강장",
+    image: "images/itx_platform1.png",
+    next: "itx_boarding",
+    yaw: 0,
+    pitch: 0
+  },
 
-meeting_point_cafe_mignon:
-"집결 장소 (카페 미뇽)",
+  itx_boarding: {
+    title: "ITX-청춘 4호차 탑승",
+    image: "images/itx_boarding.png",
+    next: "itx_second_floor",
+    yaw: 0,
+    pitch: 0
+  },
 
-meeting_point_platform_column:
-"전철 타는 곳 기둥",
-
-itx_ticket_gate:
-"ITX 청춘 개찰구",
-
-itx_corridor:
-"ITX 청춘 가는 통로",
-
-itx_escalator:
-"플랫폼 에스컬레이터",
-
-itx_platform1:
-"ITX 청춘 1번 플랫폼",
-
-itx_boarding:
-"ITX 청춘 탑승",
-
-itx_second_floor:
-"ITX 청춘 2층 객실"
-
+  itx_second_floor: {
+    title: "ITX-청춘 객실 도착",
+    image: "images/itx_second_floor.png",
+    next: null,
+    yaw: 0,
+    pitch: 0
+  }
 };
 
-function startRoute(type){
+let viewer = null;
+let currentScene = null;
 
-document.getElementById("startMenu").style.display="none";
+function startRoute(type) {
+  document.getElementById("startMenu").style.display = "none";
 
-let route=[];
-
-if(type==="outside"){
-
-route=[
-"yongsan_outside_arrival",
-...commonScenes
-];
-
+  if (type === "outside") {
+    loadScene("yongsan_outside_arrival");
+  } else if (type === "yeongdeungpo") {
+    loadScene("line1_from_yeongdeungpo");
+  } else if (type === "seoul") {
+    loadScene("line1_from_seoul_station");
+  }
 }
 
-if(type==="seoul"){
+function loadScene(sceneId) {
+  currentScene = sceneId;
+  const scene = scenes[sceneId];
 
-route=[
-"line1_from_seoul_station",
-...commonScenes
-];
+  document.getElementById("titleBox").innerHTML = scene.title;
 
+  if (viewer) {
+    viewer.destroy();
+  }
+
+  viewer = pannellum.viewer("panorama", {
+    type: "equirectangular",
+    panorama: scene.image,
+    autoLoad: true,
+    showZoomCtrl: true,
+    compass: false,
+    hfov: 110,
+    minHfov: 70,
+    maxHfov: 140,
+    yaw: scene.yaw,
+    pitch: scene.pitch,
+    hotSpots: makeHotspots(scene)
+  });
 }
 
-if(type==="yeongdeungpo"){
+function makeHotspots(scene) {
+  if (!scene.next) return [];
 
-route=[
-"line1_from_yeongdeungpo",
-...commonScenes
-];
-
+  return [{
+    pitch: -8,
+    yaw: 18,
+    type: "custom",
+    cssClass: "custom-hotspot",
+    createTooltipFunc: hotspotTooltip,
+    clickHandlerFunc: function() {
+      loadScene(scene.next);
+    }
+  }];
 }
 
-createViewer(route);
-
+function hotspotTooltip(hotSpotDiv) {
+  hotSpotDiv.setAttribute("title", "다음 장면으로 이동");
 }
-
-function createViewer(route){
-
-const scenes={};
-
-for(let i=0;i<route.length;i++){
-
-const current=route[i];
-
-scenes[current]={
-
-type:"equirectangular",
-
-panorama:"images/"+current+".png",
-
-autoLoad:true,
-
-hfov:140,
-
-pitch:-5
-
-};
-
-if(i<route.length-1){
-
-const next=route[i+1];
-
-scenes[current].hotSpots=[
-
-{
-
-pitch:-8,
-yaw:0,
-
-cssClass:"bigArrow",
-
-createTooltipFunc:function(hotSpotDiv){
-
-hotSpotDiv.innerHTML=
-"<div>➜</div>";
-
-},
-
-clickHandlerFunc:function(){
-
-viewer.loadScene(next);
-
-document.getElementById("sceneTitle").innerText=
-titles[next];
-
-}
-
-}
-
-];
-
-}
-
-}
-
-viewer=pannellum.viewer('panorama',{
-
-default:{
-firstScene:route[0]
-},
-
-scenes:scenes
-
-});
-
-document.getElementById("sceneTitle").innerText=
-titles[route[0]];
-
-}
-
 </script>
 
 </body>
